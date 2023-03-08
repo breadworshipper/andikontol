@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.tutorial4.authentication.controller;
 
+import id.ac.ui.cs.advprog.tutorial4.authentication.exceptions.InvalidTokenException;
 import id.ac.ui.cs.advprog.tutorial4.authentication.service.AuthenticationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,7 +54,13 @@ public class AuthenticationController {
         // TODO.
         //  Jangan lupa pertimbangkan kasus di mana pengguna yang logged-out tetapi masih tetap menekan tombol log-out.
         //  Pada kasus tersebut, cukup redirect:login saja tanpa perlu mengeluarkan pesan apapun
-        return "redirect:login";
+        try{
+            authenticationService.logout(token);
+            return "redirect:login";
+        }
+        catch (InvalidTokenException e){
+            return "redirect:login";
+        }
     }
     
     private static Cookie createCookie(String cookieName, String value){

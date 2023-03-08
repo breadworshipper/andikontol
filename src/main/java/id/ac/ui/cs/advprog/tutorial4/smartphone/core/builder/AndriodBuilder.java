@@ -26,6 +26,10 @@ public class AndriodBuilder extends SmartPhoneBuilder{
             smartPhone = new Oddo(smartPhoneFactory);
         }
 
+        if (smartPhone != null){
+            smartPhone.create();
+        }
+
         return  smartPhone;
     }
 }

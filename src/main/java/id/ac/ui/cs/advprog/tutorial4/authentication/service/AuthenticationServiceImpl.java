@@ -12,30 +12,45 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     // Please do not modify this class
-    
+
     @Autowired
     AccountRepository accountRepository;
 
     // TODO inisialisasi authenticationManager yang sesuai
-    AuthentiationManager authenticationManager;
-    
+    AuthentiationManager authenticationManager = AuthentiationManager.getInstance();
+
     // TODO
     //  Pada method-method di bawah ini, jangan lupa handle kasus untuk melakukan throw exception
-    
+
     @Override
     public void register(String username, String password){
         // TODO
+        if (accountRepository.doesUsernameExist(username)){
+            throw new UsernameAlreadyExistsException();
+        }
+
+        accountRepository.register(username, password);
     }
-    
+
     @Override
     public String login(String username, String password){
         // TODO
-        return null;  // return token
+        if (!accountRepository.doesUsernameExist(username)){
+            throw new UsernameDoesNotExistException();
+        }
+        if (!accountRepository.getPassword(username).equals(password)){
+            throw new InvalidPasswordException();
+        }
+        String token = Util.generateToken();
+        authenticationManager.registerNewToken(token, username);
+        return token;  // return token
     }
-    
+
     @Override
     public void logout(String token){
         // TODO
+
+        authenticationManager.removeToken(token);
     }
-    
+
 }
